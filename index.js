@@ -7,7 +7,10 @@ var articleMetadataFromOpts = require('./lib/article-metadata-from-opts');
 
 module.exports = function (config) {
   assert(typeof config.apiId === 'string', 'config.apiId: API ID is required');
-  assert(typeof config.apiSecret === 'string', 'config.apiSecret: API secret is required');
+  assert(
+    typeof config.apiSecret === 'string',
+    'config.apiSecret: API secret is required'
+  );
 
   var makeRequest = setupMakeRequest(config);
 
@@ -46,9 +49,14 @@ module.exports = function (config) {
       var meta = articleMetadataFromOpts(opts);
       var fd = createArticleUploadFormData(opts.article, bundleFiles, meta);
 
-      makeRequest('POST', '/channels/' + channelId + '/articles', {
-        formData: fd
-      }, cb);
+      makeRequest(
+        'POST',
+        '/channels/' + channelId + '/articles',
+        {
+          formData: fd
+        },
+        cb
+      );
     },
     readArticle: function (opts, cb) {
       assert(Object(opts) === opts, 'opts required');
@@ -68,11 +76,17 @@ module.exports = function (config) {
       var bundleFiles = opts.bundleFiles || [];
       var meta = articleMetadataFromOpts(opts);
       meta.revision = opts.revision;
+      console.log({ article: opts.article, meta });
       var fd = createArticleUploadFormData(opts.article, bundleFiles, meta);
 
-      makeRequest('POST', '/articles/' + articleId, {
-        formData: fd
-      }, cb);
+      makeRequest(
+        'POST',
+        '/articles/' + articleId,
+        {
+          formData: fd
+        },
+        cb
+      );
     },
     deleteArticle: function (opts, cb) {
       assert(Object(opts) === opts, 'opts required');
@@ -85,8 +99,11 @@ module.exports = function (config) {
     searchArticles: function (opts, cb) {
       assert(Object(opts) === opts, 'opts required');
       assert(typeof cb === 'function', 'cb required');
-      assert(typeof opts.channelId === 'string' || typeof opts.sectionId === 'string',
-        'opts.channelId or opts.sectionId required');
+      assert(
+        typeof opts.channelId === 'string' ||
+          typeof opts.sectionId === 'string',
+        'opts.channelId or opts.sectionId required'
+      );
       var channelId = opts.channelId;
       var sectionId = opts.sectionId;
       var endpoint = channelId
